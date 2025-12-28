@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<robot name="mobile_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Include your base file -->
+  <xacro:include filename="$(find mobile_robot_description)/urdf/base/mobile_robot_base.urdf.xacro"/>
+
+  <!-- CALL THE MACRO -->
+  <xacro:mobile_robot_base prefix=""/>
+
+</robot>
