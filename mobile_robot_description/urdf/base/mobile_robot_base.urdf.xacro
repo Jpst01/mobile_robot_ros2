@@ -38,9 +38,10 @@
         </collision>
         <inertial>
             <mass value="${base_mass}"/>
-            <inertia ixx="${(1/12) * base_mass * (base_width * base_width + base_height * base_height)}" ixy="0" ixz="0" 
-                iyy="${(1/12) * base_mass * (base_length * base_length + base_height * base_height)}" iyz="0" 
-                izz="${(1/12) * base_mass * (base_length * base_length + base_width * base_width)}"/>
+            <inertia ixx="${(1/12) * base_mass * (base_width * base_width + base_height * base_height)}" 
+                iyy="${(1/12) * base_mass * (base_length * base_length + base_height * base_height)}" 
+                izz="${(1/12) * base_mass * (base_length * base_length + base_width * base_width)}" 
+                ixy="0" ixz="0" iyz="0"/>
             <origin xyz="0 0 0" rpy="0 0 0"/>
         </inertial>
     </link>
