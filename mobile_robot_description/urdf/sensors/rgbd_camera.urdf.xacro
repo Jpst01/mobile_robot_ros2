@@ -53,7 +53,7 @@
     </joint>
     
     <gazebo reference="${prefix}rgbd_camera_link">
-        <sensor type="depth" name="rgbd_camera">
+        <sensor type="rgbd_camera" name="rgbd_camera">
             <always_on>1</always_on>
             <update_rate>30.0</update_rate>
             <camera>
@@ -68,8 +68,8 @@
                     <far>10.0</far>
                 </clip>
             </camera>
-            <gz_frame_id>rgbd_optical_frame</gz_frame_id>
-            <topic>camera</topic>
+            <frame>rgbd_camera_link</frame>
+            <topic>/camera</topic>
             <visualize>true</visualize>
         </sensor>
     </gazebo>
