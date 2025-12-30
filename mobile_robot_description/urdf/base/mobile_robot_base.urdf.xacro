@@ -58,7 +58,7 @@
             <geometry>
                 <cylinder radius="${cylindrical_wheel_radius}" length="${cylindrical_wheel_length}"/>
             </geometry>
-            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
         </collision>
         <inertial>
             <mass value="${cylindrical_wheel_mass}"/>
@@ -66,7 +66,7 @@
                 iyy="${(1/2) * cylindrical_wheel_mass * cylindrical_wheel_radius * cylindrical_wheel_radius}" 
                 izz="${(1/12) * cylindrical_wheel_mass * (3 * cylindrical_wheel_radius * cylindrical_wheel_radius + cylindrical_wheel_length * cylindrical_wheel_length)}"
                 ixy="0" ixz="0" iyz="0"/>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
         </inertial>
     </link>
 
@@ -82,7 +82,7 @@
             <geometry>
                 <cylinder radius="${cylindrical_wheel_radius}" length="${cylindrical_wheel_length}"/>
             </geometry>
-            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
         </collision>
         <inertial>
             <mass value="${cylindrical_wheel_mass}"/>
@@ -90,7 +90,7 @@
                 iyy="${(1/2) * cylindrical_wheel_mass * cylindrical_wheel_radius * cylindrical_wheel_radius}" 
                 izz="${(1/12) * cylindrical_wheel_mass * (3 * cylindrical_wheel_radius * cylindrical_wheel_radius + cylindrical_wheel_length * cylindrical_wheel_length)}"
                 ixy="0" ixz="0" iyz="0"/>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
         </inertial>
     </link>
 
@@ -106,7 +106,7 @@
             <geometry>
                 <sphere radius="${caster_wheel_radius}"/>
             </geometry>
-            <origin xyz="-0.15 0 -0.06" rpy="0 0 0"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
         </collision>
         <inertial>
             <mass value="${caster_wheel_mass}"/>

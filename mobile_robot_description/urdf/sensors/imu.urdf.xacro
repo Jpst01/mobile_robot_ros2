@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-<xacro:property name="imu_length" value="0.02" />
-<xacro:property name="imu_width" value="0.02" />
-<xacro:property name="imu_height" value="0.01" />
+<xacro:property name="imu_length" value="0.04" />
+<xacro:property name="imu_width" value="0.04" />
+<xacro:property name="imu_height" value="0.02" />
 <xacro:property name="imu_mass" value="0.1" />
 
 <xacro:macro name="imu_link" params="parent xyz rpy">
-    <material name="blue">
-        <color rgba="0 0 1 1"/>
+    <material name="red">
+        <color rgba="0.8 0 0 1"/>
     </material>
 
     <link name="imu_link">
@@ -16,13 +16,21 @@
             <geometry>
                 <box size="${imu_length} ${imu_width} ${imu_height}"/>
             </geometry>
-            <material name="blue"/>
+            <material name="red"/>
         </visual>
         <collision>
             <geometry>
                 <box size="${imu_length} ${imu_width} ${imu_height}"/>
             </geometry>
         </collision>
+        <inertial>
+            <mass value="${imu_mass}"/>
+            <inertia ixx="${(1/12) * imu_mass * (imu_width * imu_width + imu_height * imu_height)}" 
+                iyy="${(1/12) * imu_mass * (imu_length * imu_length + imu_height * imu_height)}" 
+                izz="${(1/12) * imu_mass * (imu_length * imu_length + imu_width * imu_width)}" 
+                ixy="0" ixz="0" iyz="0"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </inertial>
     </link>
 
     <joint name="imu_joint" type="fixed">

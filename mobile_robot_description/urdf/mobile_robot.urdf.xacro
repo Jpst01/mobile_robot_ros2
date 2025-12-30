@@ -11,6 +11,6 @@
   <xacro:mobile_robot_base prefix=""/>
   <xacro:rgbd_camera prefix=""/>
   <xacro:lidar_link parent="base_link" xyz="0.0 0.0 0.055" rpy="0 0 0"/>
-  <xacro:imu_link parent="base_link" xyz="0.0 0.0 0.1" rpy="0 0 0"/>
+  <xacro:imu_link parent="base_link" xyz="0.2 0.0 0.05" rpy="0 0 0"/>
 
 </robot>
