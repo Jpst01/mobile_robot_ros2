@@ -4,9 +4,11 @@
   <!-- Include your base file -->
   <xacro:include filename="$(find mobile_robot_description)/urdf/base/mobile_robot_base.urdf.xacro"/>
   <xacro:include filename="$(find mobile_robot_description)/urdf/sensors/rgbd_camera.urdf.xacro"/>
+  <xacro:include filename="$(find mobile_robot_description)/urdf/sensors/lidar.urdf.xacro"/>
 
   <!-- CALL THE MACRO -->
   <xacro:mobile_robot_base prefix=""/>
   <xacro:rgbd_camera prefix=""/>
+  <xacro:lidar_link parent="base_link" xyz="0.0 0.0 0.055" rpy="0 0 0"/>
 
 </robot>
