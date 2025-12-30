@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-<xacro:property name="imu_length" value="0.04" />
+<xacro:property name="imu_length" value="0.02" />
 <xacro:property name="imu_width" value="0.04" />
-<xacro:property name="imu_height" value="0.02" />
+<xacro:property name="imu_height" value="0.04" />
 <xacro:property name="imu_mass" value="0.1" />
 
 <xacro:macro name="imu_link" params="parent xyz rpy">
