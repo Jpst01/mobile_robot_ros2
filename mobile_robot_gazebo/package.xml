@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>mobile_robot</name>
+  <name>mobile_robot_gazebo</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
   <maintainer email="jayeshwar.tanwar01@gmail.com">jpst</maintainer>
@@ -9,10 +9,22 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>mobile_robot_description</exec_depend>
-  <exec_depend>mobile_robot_bringup</exec_depend>
-  <exec_depend>mobile_robot_gazebo</exec_depend>
-  <exec_depend>mobile_robot_system_tests</exec_depend>
+  <depend>controller_manager</depend>
+  <depend>gz_ros2_control</depend>
+  <depend>python3-numpy</depend>
+  <depend>rclcpp</depend>
+  <depend>ros2_control</depend>
+  <depend>ros2_controllers</depend>
+  <depend>ros_gz</depend>
+  <depend>ros_gz_sim</depend>
+  <depend>ros_gz_bridge</depend>
+  <depend>ros_gz_image</depend>
+  <depend>trajectory_msgs</depend>
+  <depend>xacro</depend>
+  <exec_depend>gz_ros2_control_demos</exec_depend>
+  <exec_depend>rqt_robot_steering</exec_depend>
+  <exec_depend>rviz_imu_plugin</exec_depend>
+  
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
