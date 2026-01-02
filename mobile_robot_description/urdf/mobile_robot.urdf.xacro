@@ -5,13 +5,14 @@
   <xacro:include filename="$(find mobile_robot_description)/urdf/sensors/rgbd_camera.urdf.xacro"/>
   <xacro:include filename="$(find mobile_robot_description)/urdf/sensors/lidar.urdf.xacro"/>
   <xacro:include filename="$(find mobile_robot_description)/urdf/sensors/imu.urdf.xacro"/>
-  <xacro:include filename="$(find mobile_robot_description)/urdf/control/diff_drive_controller.xacro"/>
+  <xacro:include filename="$(find mobile_robot_description)/urdf/control/diff_drive_ros2_control.urdf.xacro"/>
+  <xacro:include filename="$(find mobile_robot_description)/urdf/control/gazebo_sim_ros2_control.urdf.xacro"/>
 
   <xacro:mobile_robot_base prefix=""/>
   <xacro:rgbd_camera prefix=""/>
   <xacro:lidar_link parent="base_link" xyz="0.0 0.0 ${base_height/2 + lidar_length/2}" rpy="0 0 0"/>
   <xacro:imu_link parent="base_link" xyz="${-(base_length/2)-(imu_length/2)} ${(rgbd_camera_width/2)+(imu_width/2)+(offset)} 0" rpy="0 0 0"/>
-  <xacro:diff_drive_controller />
-  
+  <xacro:diff_drive_ros2_control prefix="" use_gazebo="true"/>
+  <xacro:load_gazebo_ros2_control robot_name="mobile_robot" use_gazebo="true"/>  
 
 </robot>
