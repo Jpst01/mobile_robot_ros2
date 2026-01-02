@@ -10,7 +10,7 @@
                 </xacro:if>
             </hardware>
 
-            <joint name="${prefix}left_wheel_joint">
+            <joint name="base_left_wheel_joint">
                 <command_interface name="velocity">
                     <param name="min">-20.0</param>
                     <param name="max">20.0</param>
@@ -19,7 +19,7 @@
                 <state_interface name="position"/>
             </joint>
 
-            <joint name="${prefix}right_wheel_joint">
+            <joint name="base_right_wheel_joint">
                 <command_interface name="velocity">
                     <param name="min">-20.0</param>
                     <param name="max">20.0</param>
