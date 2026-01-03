@@ -1,0 +1,55 @@
+Panels:
+  - Class: rviz/Displays
+    Name: Displays
+  - Class: rviz/Views
+    Name: Views
+
+Visualization Manager:
+  Class: ""
+  Enabled: true
+
+  Global Options:
+    Fixed Frame: "odom"
+    background_color: 48; 48; 48
+    frame_rate: 30
+
+  Displays:
+    - Name: Grid
+      Class: rviz_default_plugins/Grid
+      Enabled: true
+      Plane: XY
+      Cell Size: 1
+      Plane Cell Count: 10
+      Color: 160; 160; 160
+      Alpha: 0.5
+
+    - Name: RobotModel
+      Class: rviz_default_plugins/RobotModel
+      Enabled: true
+      Description Source: Topic
+      Description Topic: /robot_description
+      Visual Enabled: true
+      Collision Enabled: true
+
+    - Name: TF
+      Class: rviz_default_plugins/TF
+      Enabled: true
+      Show names: false
+      Show Axes: false
+      Marker Scale: 0.3
+      Frame Timeout: 15.0
+
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 2.5
+      Pitch: 0.6
+      Yaw: 4.5
+      Focal Point: 
+        X: 0
+        Y: 0
+        Z: 0.1
+
+Window Geometry:
+  Width: 1400
+  Length: 900
