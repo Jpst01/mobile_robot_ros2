@@ -1,13 +1,4 @@
 #!/usr/bin/env python3
-"""
-Launch Gazebo simulation with a robot.
-
-This launch file sets up a complete ROS 2 simulation environment with Gazebo for
-a Yahboom ROSMASTER robot: https://github.com/YahboomTechnology
-
-:author: Addison Sears-Collins
-:date: November 21, 2024
-"""
 
 import os
 from launch import LaunchDescription
@@ -24,19 +15,7 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    """
-    Generate a launch description for the Gazebo simulation.
 
-    This function sets up all necessary parameters, paths, and nodes required to launch
-    the Gazebo simulation with a robot. It handles:
-    1. Setting up package paths and constants
-    2. Declaring launch arguments for robot configuration
-    3. Setting up the Gazebo environment
-    4. Spawning the robot in simulation
-
-    Returns:
-        LaunchDescription: A complete launch description for the simulation
-    """
     # Constants for paths to different files and folders
     package_name_gazebo = 'mobile_robot_gazebo'
     package_name_description = 'mobile_robot_description'
@@ -63,14 +42,15 @@ def generate_launch_description():
     gazebo_models_path = os.path.join(pkg_share_gazebo, gazebo_models_path)
 
     # Launch configuration variables
+    enable_odom_tf = LaunchConfiguration('enable_odom_tf')
     headless = LaunchConfiguration('headless')
     jsp_gui = LaunchConfiguration('jsp_gui')
-    load_controllers_cfg = LaunchConfiguration('load_controllers')
+    load_controllers = LaunchConfiguration('load_controllers')
     robot_name = LaunchConfiguration('robot_name')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
     use_rviz = LaunchConfiguration('use_rviz')
     use_gazebo = LaunchConfiguration('use_gazebo')
-    use_robot_state_pub_cfg = LaunchConfiguration('use_robot_state_pub')
+    use_robot_state_pub = LaunchConfiguration('use_robot_state_pub')
     use_sim_time = LaunchConfiguration('use_sim_time')
     world_file = LaunchConfiguration('world_file')
 
@@ -89,6 +69,12 @@ def generate_launch_description():
     yaw = LaunchConfiguration('yaw')
 
     # Declare the launch arguments
+    declare_enable_odom_tf_cmd = DeclareLaunchArgument(
+        name='enable_odom_tf',
+        default_value='true',
+        choices=['true', 'false'],
+        description='Whether to enable odometry transform broadcasting via ROS 2 Control')
+
     declare_headless_cmd = DeclareLaunchArgument(
         name='headless',
         default_value='False',
@@ -138,7 +124,7 @@ def generate_launch_description():
     declare_world_cmd = DeclareLaunchArgument(
         name='world_file',
         default_value=default_world_file,
-        description='World file name (e.g., empty.world, depot.world)')
+        description='World file name (e.g., empty.world, house.world, pick_and_place_demo.world)')
 
     # Pose arguments
     declare_x_cmd = DeclareLaunchArgument(
@@ -177,13 +163,14 @@ def generate_launch_description():
             os.path.join(pkg_share_description, 'launch', 'robot_state_publisher.launch.py')
         ]),
         launch_arguments={
+            'enable_odom_tf': enable_odom_tf,
             'jsp_gui': jsp_gui,
             'rviz_config_file': rviz_config_file,
             'use_rviz': use_rviz,
             'use_gazebo': use_gazebo,
             'use_sim_time': use_sim_time
         }.items(),
-        condition=IfCondition(use_robot_state_pub_cfg)
+        condition=IfCondition(use_robot_state_pub)
     )
 
     # Include ROS 2 Controllers launch file if enabled
@@ -194,8 +181,13 @@ def generate_launch_description():
         launch_arguments={
             'use_sim_time': use_sim_time
         }.items(),
-        condition=IfCondition(load_controllers_cfg)
+        condition=IfCondition(load_controllers)
     )
+
+    # Set Gazebo model path
+    set_env_vars_resources = AppendEnvironmentVariable(
+        'GZ_SIM_RESOURCE_PATH',
+        gazebo_models_path)
 
     # Start Gazebo
     start_gazebo_server_cmd = IncludeLaunchDescription(
@@ -219,6 +211,17 @@ def generate_launch_description():
         }],
         output='screen')
 
+    # Includes optimizations to minimize latency and bandwidth when streaming image data
+    start_gazebo_ros_image_bridge_cmd = Node(
+        package='ros_gz_image',
+        executable='image_bridge',
+        arguments=[
+            '/cam_1/image'
+        ],
+        remappings=[
+            ('/cam_1/image', '/cam_1/color/image_raw')
+        ])
+
     # Spawn the robot
     start_gazebo_ros_spawner_cmd = Node(
         package='ros_gz_sim',
@@ -240,6 +243,7 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     # Declare the launch options
+    ld.add_action(declare_enable_odom_tf_cmd)
     ld.add_action(declare_headless_cmd)
     ld.add_action(declare_robot_name_cmd)
     ld.add_action(declare_rviz_config_file_cmd)
@@ -260,13 +264,14 @@ def generate_launch_description():
     ld.add_action(declare_yaw_cmd)
 
     # Add the actions to the launch description
+    ld.add_action(set_env_vars_resources)
     ld.add_action(robot_state_publisher_cmd)
-
+    ld.add_action(load_controllers_cmd)
     ld.add_action(start_gazebo_server_cmd)
     ld.add_action(start_gazebo_client_cmd)
 
     ld.add_action(start_gazebo_ros_bridge_cmd)
+    ld.add_action(start_gazebo_ros_image_bridge_cmd)
     ld.add_action(start_gazebo_ros_spawner_cmd)
-    ld.add_action(load_controllers_cmd)    
 
     return ld
