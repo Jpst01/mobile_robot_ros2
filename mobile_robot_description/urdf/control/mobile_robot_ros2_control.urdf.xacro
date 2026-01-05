@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:macro name="mobile_robot_ros2_control" params="prefix use_gazebo">
-        <ros2_control name="RobotSystem" type="system">
+        <ros2_control name="DiffDriveSystem" type="system">
 
             <hardware>
                 <xacro:if value="${use_gazebo}">
