@@ -1,10 +1,10 @@
-<?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <xacro:macro name="load_gazebo_ros2_control" params="robot_name use_gazebo">
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+    <xacro:macro name="load_gazebo_sim_ros2_control_plugin" params="robot_name use_gazebo">
         <xacro:if value="${use_gazebo}">
             <gazebo>
-                <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin" filename="gz_ros2_control-system">
-                    <parameters>$(find mobile_robot_description)/urdf/diff_drive_controller.yaml</parameters>
+                <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+                    <parameters>$(find mobile_robot_description)/config/${robot_name}/ros2_controllers.yaml</parameters>
                     <ros>
                         <remapping>/controller_manager/robot_description:=/robot_description</remapping>
                     </ros>
