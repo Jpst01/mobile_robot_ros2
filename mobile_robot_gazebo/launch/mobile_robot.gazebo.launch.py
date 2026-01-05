@@ -1,35 +1,86 @@
 #!/usr/bin/env python3
+"""
+Launch Gazebo simulation with a robot.
+
+This launch file sets up a complete ROS 2 simulation environment with Gazebo for
+a Yahboom ROSMASTER robot: https://github.com/YahboomTechnology
+
+:author: Addison Sears-Collins
+:date: November 21, 2024
+"""
 
 import os
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, AppendEnvironmentVariable
+from launch.actions import (
+    AppendEnvironmentVariable,
+    DeclareLaunchArgument,
+    IncludeLaunchDescription
+)
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, PythonExpression
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
+
 def generate_launch_description():
+    """
+    Generate a launch description for the Gazebo simulation.
 
-    gazebo_pkg = 'mobile_robot_gazebo'
-    description_pkg = 'mobile_robot_description'
-    bringup_pkg = 'mobile_robot_bringup'
+    This function sets up all necessary parameters, paths, and nodes required to launch
+    the Gazebo simulation with a robot. It handles:
+    1. Setting up package paths and constants
+    2. Declaring launch arguments for robot configuration
+    3. Setting up the Gazebo environment
+    4. Spawning the robot in simulation
 
-    pkg_gazebo = FindPackageShare(gazebo_pkg).find(gazebo_pkg)
-    pkg_description = FindPackageShare(description_pkg).find(description_pkg)
-    pkg_bringup = FindPackageShare(bringup_pkg).find(bringup_pkg)
-    pkg_ros_gz_sim = FindPackageShare('ros_gz_sim').find('ros_gz_sim')
+    Returns:
+        LaunchDescription: A complete launch description for the simulation
+    """
+    # Constants for paths to different files and folders
+    package_name_gazebo = 'mobile_robot_gazebo'
+    package_name_description = 'mobile_robot_description'
+    package_name_bringup = 'mobile_robot_bringup'
 
-    world_file = PathJoinSubstitution(
-        [pkg_gazebo, 'worlds', LaunchConfiguration('world')]
-    )
+    default_robot_name = 'mobile_robot'
+    gazebo_models_path = 'models'
+    default_world_file = 'empty.world'
+    gazebo_worlds_path = 'worlds'
+    ros_gz_bridge_config_file_path = 'config/ros_gz_bridge.yaml'
+    rviz_config_filename = 'mobile_robot_gazebo_sim.rviz'
 
-    bridge_config = os.path.join(pkg_gazebo, 'config', 'gz_ros2_bridges.yaml')
+    # Set the path to different files and folders
+    pkg_ros_gz_sim = FindPackageShare(package='ros_gz_sim').find('ros_gz_sim')
+    pkg_share_gazebo = FindPackageShare(package=package_name_gazebo).find(package_name_gazebo)
+    pkg_share_description = FindPackageShare(
+        package=package_name_description).find(package_name_description)
+    pkg_share_bringup = FindPackageShare(package=package_name_bringup).find(package_name_bringup)
 
-    use_sim_time = LaunchConfiguration('use_sim_time')
+    default_ros_gz_bridge_config_file_path = os.path.join(
+        pkg_share_gazebo, ros_gz_bridge_config_file_path)
+    default_rviz_config_path = PathJoinSubstitution(
+        [pkg_share_gazebo, 'rviz', rviz_config_filename])
+    gazebo_models_path = os.path.join(pkg_share_gazebo, gazebo_models_path)
+
+    # Launch configuration variables
     headless = LaunchConfiguration('headless')
+    jsp_gui = LaunchConfiguration('jsp_gui')
+    load_controllers_cfg = LaunchConfiguration('load_controllers')
     robot_name = LaunchConfiguration('robot_name')
+    rviz_config_file = LaunchConfiguration('rviz_config_file')
+    use_rviz = LaunchConfiguration('use_rviz')
+    use_gazebo = LaunchConfiguration('use_gazebo')
+    use_robot_state_pub_cfg = LaunchConfiguration('use_robot_state_pub')
+    use_sim_time = LaunchConfiguration('use_sim_time')
+    world_file = LaunchConfiguration('world_file')
 
+    world_path = PathJoinSubstitution([
+        pkg_share_gazebo,
+        gazebo_worlds_path,
+        world_file
+    ])
+
+    # Set the pose configuration variables
     x = LaunchConfiguration('x')
     y = LaunchConfiguration('y')
     z = LaunchConfiguration('z')
@@ -37,91 +88,185 @@ def generate_launch_description():
     pitch = LaunchConfiguration('pitch')
     yaw = LaunchConfiguration('yaw')
 
-    declare_args = [
-        DeclareLaunchArgument('use_sim_time', default_value='true'),
-        DeclareLaunchArgument('headless', default_value='false',),
-        DeclareLaunchArgument('robot_name', default_value='mobile_robot',),
-        DeclareLaunchArgument('world', default_value='empty.world',),
+    # Declare the launch arguments
+    declare_headless_cmd = DeclareLaunchArgument(
+        name='headless',
+        default_value='False',
+        description='Whether to execute gzclient (visualization)')
 
-        DeclareLaunchArgument('x', default_value='0.0',),
-        DeclareLaunchArgument('y', default_value='0.0',),
-        DeclareLaunchArgument('z', default_value='0.05',),
-        DeclareLaunchArgument('roll', default_value='0.0',),
-        DeclareLaunchArgument('pitch', default_value='0.0',),
-        DeclareLaunchArgument('yaw', default_value='0.0',),
-    ]
+    declare_robot_name_cmd = DeclareLaunchArgument(
+        name='robot_name',
+        default_value=default_robot_name,
+        description='The name for the robot')
 
-    robot_state_publisher = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(pkg_description, 'launch', 'robot_state_publisher.launch.py')
-        ),
+    declare_rviz_config_file_cmd = DeclareLaunchArgument(
+        name='rviz_config_file',
+        default_value=default_rviz_config_path,
+        description='Full path to the RVIZ config file to use')
+
+    declare_load_controllers_cmd = DeclareLaunchArgument(
+        name='load_controllers',
+        default_value='true',
+        description='Flag to enable loading of ROS 2 controllers')
+
+    declare_use_robot_state_pub_cmd = DeclareLaunchArgument(
+        name='use_robot_state_pub',
+        default_value='true',
+        description='Flag to enable robot state publisher')
+
+    # GUI and visualization arguments
+    declare_jsp_gui_cmd = DeclareLaunchArgument(
+        name='jsp_gui',
+        default_value='false',
+        description='Flag to enable joint_state_publisher_gui')
+
+    declare_use_rviz_cmd = DeclareLaunchArgument(
+        name='use_rviz',
+        default_value='true',
+        description='Flag to enable RViz')
+
+    declare_use_gazebo_cmd = DeclareLaunchArgument(
+        name='use_gazebo',
+        default_value='true',
+        description='Flag to enable Gazebo')
+
+    declare_use_sim_time_cmd = DeclareLaunchArgument(
+        name='use_sim_time',
+        default_value='true',
+        description='Use simulation (Gazebo) clock if true')
+
+    declare_world_cmd = DeclareLaunchArgument(
+        name='world_file',
+        default_value=default_world_file,
+        description='World file name (e.g., empty.world, depot.world)')
+
+    # Pose arguments
+    declare_x_cmd = DeclareLaunchArgument(
+        name='x',
+        default_value='0.0',
+        description='x component of initial position, meters')
+
+    declare_y_cmd = DeclareLaunchArgument(
+        name='y',
+        default_value='0.0',
+        description='y component of initial position, meters')
+
+    declare_z_cmd = DeclareLaunchArgument(
+        name='z',
+        default_value='0.05',
+        description='z component of initial position, meters')
+
+    declare_roll_cmd = DeclareLaunchArgument(
+        name='roll',
+        default_value='0.0',
+        description='roll angle of initial orientation, radians')
+
+    declare_pitch_cmd = DeclareLaunchArgument(
+        name='pitch',
+        default_value='0.0',
+        description='pitch angle of initial orientation, radians')
+
+    declare_yaw_cmd = DeclareLaunchArgument(
+        name='yaw',
+        default_value='0.0',
+        description='yaw angle of initial orientation, radians')
+
+    # Include Robot State Publisher launch file if enabled
+    robot_state_publisher_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            os.path.join(pkg_share_description, 'launch', 'robot_state_publisher.launch.py')
+        ]),
         launch_arguments={
-            'use_sim_time': use_sim_time,
-        }.items()
-    )
-
-    load_controllers = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(pkg_bringup, 'launch', 'load_ros2_controllers.launch.py')
-        ),
-        launch_arguments={
-            'use_sim_time': use_sim_time,
-            'robot_name': robot_name,
-        }.items()
-    )
-
-    gazebo_server = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
-        ),
-        launch_arguments={
-            'gz_args': ['-r -s', world_file],
-        }.items()
-    )
-
-    gazebo_client = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
-        ),
-        launch_arguments={
-            'gz_args': ['-g']
+            'jsp_gui': jsp_gui,
+            'rviz_config_file': rviz_config_file,
+            'use_rviz': use_rviz,
+            'use_gazebo': use_gazebo,
+            'use_sim_time': use_sim_time
         }.items(),
-        condition=IfCondition(PythonExpression(['not ', headless]))
+        condition=IfCondition(use_robot_state_pub_cfg)
     )
 
-    spawn_robot = Node(
+    # Include ROS 2 Controllers launch file if enabled
+    load_controllers_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            os.path.join(pkg_share_bringup, 'launch', 'load_ros2_controllers.launch.py')
+        ]),
+        launch_arguments={
+            'use_sim_time': use_sim_time
+        }.items(),
+        condition=IfCondition(load_controllers_cfg)
+    )
+
+    # Start Gazebo
+    start_gazebo_server_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
+        launch_arguments=[('gz_args', [' -r -s -v 4 ', world_path])])
+
+    # Start Gazebo client (GUI) if not headless
+    start_gazebo_client_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
+        launch_arguments={'gz_args': ['-g ']}.items(),
+        condition=IfCondition(PythonExpression(['not ', headless])))
+
+    # Bridge ROS topics and Gazebo messages for establishing communication
+    start_gazebo_ros_bridge_cmd = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        parameters=[{
+            'config_file': default_ros_gz_bridge_config_file_path,
+        }],
+        output='screen')
+
+    # Spawn the robot
+    start_gazebo_ros_spawner_cmd = Node(
         package='ros_gz_sim',
         executable='create',
+        output='screen',
         arguments=[
             '-topic', '/robot_description',
             '-name', robot_name,
+            '-allow_renaming', 'true',
             '-x', x,
             '-y', y,
             '-z', z,
             '-R', roll,
             '-P', pitch,
-            '-Y', yaw,
-        ],
-        output='screen'
-    )
+            '-Y', yaw
+        ])
 
-    bridge = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        parameters=[{'config_file': bridge_config}],
-        output='screen'
-    )
-
+    # Create the launch description and populate
     ld = LaunchDescription()
 
-    for arg in declare_args:
-        ld.add_action(arg)
+    # Declare the launch options
+    ld.add_action(declare_headless_cmd)
+    ld.add_action(declare_robot_name_cmd)
+    ld.add_action(declare_rviz_config_file_cmd)
+    ld.add_action(declare_jsp_gui_cmd)
+    ld.add_action(declare_load_controllers_cmd)
+    ld.add_action(declare_use_rviz_cmd)
+    ld.add_action(declare_use_gazebo_cmd)
+    ld.add_action(declare_use_robot_state_pub_cmd)
+    ld.add_action(declare_use_sim_time_cmd)
+    ld.add_action(declare_world_cmd)
 
-    ld.add_action(robot_state_publisher)
-    ld.add_action(gazebo_server)
-    ld.add_action(gazebo_client)
-    ld.add_action(spawn_robot)
-    ld.add_action(bridge)
-    ld.add_action(load_controllers)
+    # Add pose arguments
+    ld.add_action(declare_x_cmd)
+    ld.add_action(declare_y_cmd)
+    ld.add_action(declare_z_cmd)
+    ld.add_action(declare_roll_cmd)
+    ld.add_action(declare_pitch_cmd)
+    ld.add_action(declare_yaw_cmd)
+
+    # Add the actions to the launch description
+    ld.add_action(robot_state_publisher_cmd)
+
+    ld.add_action(start_gazebo_server_cmd)
+    ld.add_action(start_gazebo_client_cmd)
+
+    ld.add_action(start_gazebo_ros_bridge_cmd)
+    ld.add_action(start_gazebo_ros_spawner_cmd)
+    ld.add_action(load_controllers_cmd)    
 
     return ld

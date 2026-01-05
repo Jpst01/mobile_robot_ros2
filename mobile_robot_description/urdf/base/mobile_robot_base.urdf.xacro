@@ -11,7 +11,7 @@
 <xacro:property name="cylindrical_wheel_mass" value="0.5" />
 <xacro:property name="caster_wheel_mass" value="0.3" />
 
-<xacro:macro name="mobile_robot_base" params="prefix">
+<xacro:macro name="mobile_robot_base">
 
     <material name="green">
         <color rgba="0 0.8 0 1"/>
@@ -21,9 +21,9 @@
         <color rgba="0.8 0.8 0.8 1.0"/>
     </material>
 
-    <link name="${prefix}base_footprint" />
+    <link name="base_footprint" />
     
-    <link name="${prefix}base_link">
+    <link name="base_link">
         <visual>
             <geometry>
                 <box size="${base_length} ${base_width} ${base_height}"/>
@@ -47,19 +47,19 @@
         </inertial>
     </link>
 
-    <link name="${prefix}right_wheel_link">
+    <link name="right_wheel_link">
         <visual>
             <geometry>
                 <cylinder radius="${cylindrical_wheel_radius}" length="${cylindrical_wheel_length}"/>
             </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
             <material name="grey"/>
         </visual>
         <collision>
             <geometry>
                 <cylinder radius="${cylindrical_wheel_radius}" length="${cylindrical_wheel_length}"/>
             </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
         </collision>
         <inertial>
             <mass value="${cylindrical_wheel_mass}"/>
@@ -67,23 +67,23 @@
                 iyy="${(1/2) * cylindrical_wheel_mass * cylindrical_wheel_radius * cylindrical_wheel_radius}" 
                 izz="${(1/12) * cylindrical_wheel_mass * (3 * cylindrical_wheel_radius * cylindrical_wheel_radius + cylindrical_wheel_length * cylindrical_wheel_length)}"
                 ixy="0" ixz="0" iyz="0"/>
-            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
         </inertial>
     </link>
 
-    <link name="${prefix}left_wheel_link">
+    <link name="left_wheel_link">
         <visual>
             <geometry>
                 <cylinder radius="${cylindrical_wheel_radius}" length="${cylindrical_wheel_length}"/>
             </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
             <material name="grey"/>
         </visual>
         <collision>
             <geometry>
                 <cylinder radius="${cylindrical_wheel_radius}" length="${cylindrical_wheel_length}"/>
             </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
         </collision>
         <inertial>
             <mass value="${cylindrical_wheel_mass}"/>
@@ -91,11 +91,11 @@
                 iyy="${(1/2) * cylindrical_wheel_mass * cylindrical_wheel_radius * cylindrical_wheel_radius}" 
                 izz="${(1/12) * cylindrical_wheel_mass * (3 * cylindrical_wheel_radius * cylindrical_wheel_radius + cylindrical_wheel_length * cylindrical_wheel_length)}"
                 ixy="0" ixz="0" iyz="0"/>
-            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
         </inertial>
     </link>
 
-    <link name="${prefix}caster_wheel">
+    <link name="caster_wheel">
         <visual>
             <geometry>
                 <sphere radius="${caster_wheel_radius}"/>
@@ -119,29 +119,29 @@
         </inertial>
     </link>
 
-    <joint name="${prefix}base_footprint_joint" type="fixed">
-        <parent link="${prefix}base_footprint"/>
-        <child link="${prefix}base_link"/>
+    <joint name="base_footprint_joint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
         <origin xyz="0 0 0.1" rpy="0 0 0"/>
     </joint>
 
-    <joint name="${prefix}base_right_wheel_joint" type="continuous">
-        <parent link="${prefix}base_link"/>
-        <child link="${prefix}right_wheel_link"/>
+    <joint name="base_right_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="right_wheel_link"/>
         <axis xyz="0 1 0"/>
-        <origin xyz="0.1 0.16 -0.03" rpy="1.5708 0 0"/>
+        <origin xyz="0.1 0.16 -0.03" rpy="0 0 0"/>
     </joint>
 
-    <joint name="${prefix}base_left_wheel_joint" type="continuous">
-        <parent link="${prefix}base_link"/>
-        <child link="${prefix}left_wheel_link"/>
+    <joint name="base_left_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="left_wheel_link"/>
         <axis xyz="0 1 0"/>
-        <origin xyz="0.1 -0.16 -0.03" rpy="1.5708 0 0"/>
+        <origin xyz="0.1 -0.16 -0.03" rpy="0 0 0"/>
     </joint>
 
-    <joint name="${prefix}base_caster_wheel_joint" type="fixed">
-        <parent link="${prefix}base_link"/>
-        <child link="${prefix}caster_wheel"/>
+    <joint name="base_caster_wheel_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="caster_wheel"/>
         <axis xyz="0 0 1"/>
         <origin xyz="-0.15 0 -0.06" rpy="0 0 0"/>
     </joint>

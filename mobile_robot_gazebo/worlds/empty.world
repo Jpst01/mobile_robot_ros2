@@ -1,46 +1,50 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
+
 <sdf version="1.6">
   <world name="default">
 
-    <plugin 
-        name="gz-sim-physics-system"
-        filename="gz::sim::systems::Physics">
+    <!-- Plugin for simulating physics -->
+    <plugin
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics">
     </plugin>
 
-    <plugin 
-        name="gz-sim-user-commands-system"
-        filename="gz::sim::systems::UserCommands">
+    <!-- Plugin for handling user commands -->
+    <plugin
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
     </plugin>
 
-    <plugin 
-        name="gz-sim-scene-broadcaster-system"
-        filename="gz::sim::systems::SceneBroadcaster">
+    <!-- Plugin for broadcasting scene updates -->
+    <plugin
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
     </plugin>
 
-    <plugin 
-        name="gz-sim-sensors-system"
-        filename="gz::sim::systems::Sensors">
-        <render_engine>ogre2</render_engine>
+    <!-- Plugin for handling sensors like the LIDAR -->
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
     </plugin>
 
-    <plugin 
-        name="gz-sim-imu-system"
-        filename="gz::sim::systems::Imu">
+    <!-- Plugin for IMU -->
+    <plugin filename="gz-sim-imu-system"
+      name="gz::sim::systems::Imu">
     </plugin>
 
-
-    <light name="sun" type="directional">
-      <cast_shadows>1</cast_shadows>
+     <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
       <pose>0 0 10 0 0 0</pose>
-      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <diffuse>1 1 1 1</diffuse>
       <specular>0.5 0.5 0.5 1</specular>
-      <direction>-0.5 0.1 -0.09</direction>
       <attenuation>
         <range>1000</range>
         <constant>0.9</constant>
         <linear>0.01</linear>
         <quadratic>0.001</quadratic>
       </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
     </light>
 
     <model name="ground_plane">
@@ -56,8 +60,8 @@
           <surface>
             <friction>
               <ode>
-                <mu>0</mu>
-                <mu2>0</mu2>
+                <mu>0.0</mu>
+                <mu2>0.0</mu2>
               </ode>
             </friction>
           </surface>
@@ -77,5 +81,6 @@
         </visual>
       </link>
     </model>
+
   </world>
 </sdf>

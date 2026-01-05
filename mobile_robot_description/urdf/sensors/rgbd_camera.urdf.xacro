@@ -9,13 +9,13 @@
 <xacro:property name="base_width" value="0.3" />
 <xacro:property name="base_height" value="0.08" />
 
-<xacro:macro name="rgbd_camera" params="prefix">
+<xacro:macro name="rgbd_camera">
 
     <material name="blue">
         <color rgba="0 0 1 1"/>
     </material>
 
-    <link name="${prefix}rgbd_camera_link">
+    <link name="rgbd_camera_link">
         <visual>
             <geometry>
                 <box size="${rgbd_camera_length} ${rgbd_camera_width} ${rgbd_camera_height}"/>
@@ -39,9 +39,9 @@
         </inertial>
     </link>
 
-    <joint name="${prefix}base_rgbd_camera_joint" type="fixed">
-        <parent link="${prefix}base_link"/>
-        <child link="${prefix}rgbd_camera_link"/>
+    <joint name="base_rgbd_camera_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="rgbd_camera_link"/>
         <origin xyz="${-(base_length/2)-(rgbd_camera_length/2)} 0 0" rpy="0 0 0"/>
     </joint>
 
@@ -52,7 +52,7 @@
       <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/>
     </joint>
     
-    <gazebo reference="${prefix}rgbd_camera_link">
+    <gazebo reference="rgbd_camera_link">
         <sensor type="rgbd_camera" name="rgbd_camera">
             <always_on>1</always_on>
             <update_rate>30.0</update_rate>
