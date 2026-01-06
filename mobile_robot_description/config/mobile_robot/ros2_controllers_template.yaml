@@ -15,9 +15,9 @@ controller_manager:
 diff_drive_controller:
  ros__parameters:
    # Joint names
-   left_joint_name: ${prefix}base_left_wheel_joint
-   right_joint_name: ${prefix}base_right_wheel_joint
-   
+   left_wheel_names: ["${prefix}base_left_wheel_joint"]
+   right_wheel_names: ["${prefix}base_right_wheel_joint"]
+
    # Robot physical parameters
    wheel_separation: 0.32
    wheel_radius: 0.07
@@ -29,7 +29,7 @@ diff_drive_controller:
    tf_frame_prefix_enable: false
    tf_frame_prefix: ""
    odom_frame_id: odom
-   base_frame_id: base_footprint
+   base_frame_id: base_link
 
    # Odometry parameters
    pose_covariance_diagonal: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
@@ -53,14 +53,6 @@ diff_drive_controller:
    linear.x.max_acceleration: 0.0
    linear.x.max_jerk: 0.0
    linear.x.min_jerk: 0.0
-   linear.y.has_velocity_limits: false
-   linear.y.has_acceleration_limits: false
-   linear.y.has_jerk_limits: false
-   linear.y.max_velocity: 0.0
-   linear.y.min_velocity: 0.0
-   linear.y.max_acceleration: 0.0
-   linear.y.max_jerk: 0.0
-   linear.y.min_jerk: 0.0
    angular.z.has_velocity_limits: false
    angular.z.has_acceleration_limits: false
    angular.z.has_jerk_limits: false

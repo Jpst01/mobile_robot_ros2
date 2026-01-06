@@ -124,7 +124,7 @@ def generate_launch_description():
     declare_world_cmd = DeclareLaunchArgument(
         name='world_file',
         default_value=default_world_file,
-        description='World file name (e.g., empty.world, house.world, pick_and_place_demo.world)')
+        description='World file name (e.g., empty.world, depot.world)')
 
     # Pose arguments
     declare_x_cmd = DeclareLaunchArgument(
@@ -216,10 +216,10 @@ def generate_launch_description():
         package='ros_gz_image',
         executable='image_bridge',
         arguments=[
-            '/cam_1/image'
+            '/camera/image'
         ],
         remappings=[
-            ('/cam_1/image', '/cam_1/color/image_raw')
+            ('/camera/image', '/camera/color/image_raw')
         ])
 
     # Spawn the robot
