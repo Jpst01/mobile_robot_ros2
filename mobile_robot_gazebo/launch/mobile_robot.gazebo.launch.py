@@ -18,7 +18,7 @@ def generate_launch_description():
 
     # Constants for paths to different files and folders
     package_name_gazebo = 'mobile_robot_gazebo'
-    package_name_description = 'mobile_robot_description'
+    package_name_description = 'mobile_description'
     package_name_bringup = 'mobile_robot_bringup'
 
     default_robot_name = 'mobile_robot'

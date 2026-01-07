@@ -1,41 +1,41 @@
 #!/usr/bin/env python3
 
 from launch import LaunchDescription
-from launch.actions import ExecuteProcess, RegisterEventHandler, TimerAction
-from launch.event_handlers import OnProcessExit
+from launch_ros.actions import Node
+from launch.actions import TimerAction
+
 
 def generate_launch_description():
 
-    start_diff_drive_controller_cmd = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'diff_drive_controller'],
+    joint_state_broadcaster_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=[
+            'joint_state_broadcaster',
+            '--controller-manager', '/controller_manager'
+        ],
         output='screen'
     )
 
-    # Start joint state broadcaster
-    start_joint_state_broadcaster_cmd = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'joint_state_broadcaster'],
+    diff_drive_controller_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=[
+            'diff_drive_controller',
+            '--controller-manager', '/controller_manager'
+        ],
         output='screen'
     )
 
-    # Add delay to joint state broadcaster (if necessary)
-    delayed_start = TimerAction(
-        period=25.0,
-        actions=[start_joint_state_broadcaster_cmd]
-    )
+    return LaunchDescription([
 
-    # Register event handler for sequencing
-    load_joint_state_broadcaster_cmd = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=start_joint_state_broadcaster_cmd,
-            on_exit=[start_diff_drive_controller_cmd]))
+        TimerAction(
+            period=2.0,
+            actions=[joint_state_broadcaster_spawner]
+        ),
 
-    # Create and populate the launch description
-    ld = LaunchDescription()
-
-    # Add the actions to the launch description in sequence
-    ld.add_action(delayed_start)
-    ld.add_action(load_joint_state_broadcaster_cmd)
-
-    return ld
+        TimerAction(
+            period=4.0,
+            actions=[diff_drive_controller_spawner]
+        ),
+    ])

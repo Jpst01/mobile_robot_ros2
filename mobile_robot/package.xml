@@ -9,7 +9,7 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>mobile_robot_description</exec_depend>
+  <exec_depend>mobile_description</exec_depend>
   <exec_depend>mobile_robot_bringup</exec_depend>
   <exec_depend>mobile_robot_gazebo</exec_depend>
   <exec_depend>mobile_robot_system_tests</exec_depend>

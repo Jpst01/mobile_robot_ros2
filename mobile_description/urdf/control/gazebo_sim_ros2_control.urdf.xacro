@@ -4,7 +4,7 @@
         <xacro:if value="${use_gazebo}">
             <gazebo>
                 <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-                    <parameters>$(find mobile_robot_description)/config/${robot_name}/ros2_controllers.yaml</parameters>
+                    <parameters>$(find mobile_description)/config/${robot_name}/ros2_controllers.yaml</parameters>
                 </plugin>
             </gazebo>
         </xacro:if>

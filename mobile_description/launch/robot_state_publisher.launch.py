@@ -39,7 +39,7 @@ def generate_launch_description():
     # --------------------
     # URDF / Xacro
     # --------------------
-    pkg_share = FindPackageShare('mobile_robot_description')
+    pkg_share = FindPackageShare('mobile_description')
 
     urdf_path = PathJoinSubstitution([
         pkg_share,

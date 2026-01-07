@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<robot name="mobile_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find mobile_description)/urdf/mech/mobile_robot_base.urdf.xacro"/>
+  <xacro:include filename="$(find mobile_description)/urdf/sensors/rgbd_camera.urdf.xacro"/>
+  <xacro:include filename="$(find mobile_description)/urdf/sensors/lidar.urdf.xacro"/>
+  <xacro:include filename="$(find mobile_description)/urdf/sensors/imu.urdf.xacro"/>
+  <xacro:include filename="$(find mobile_description)/urdf/control/mobile_robot_ros2_control.urdf.xacro"/>
+  <xacro:include filename="$(find mobile_description)/urdf/control/gazebo_sim_ros2_control.urdf.xacro"/>
+
+  <xacro:mobile_robot_base/>
+  <xacro:rgbd_camera/>
+  <xacro:lidar_link parent="base_link" xyz="0.0 0.0 ${base_height/2 + lidar_length/2}" rpy="0 0 0"/>
+  <xacro:imu_link parent="base_link" xyz="${-(base_length/2)-(imu_length/2)} ${(rgbd_camera_width/2)+(imu_width/2)+(offset)} 0" rpy="0 0 0"/>
+  <xacro:mobile_robot_ros2_control use_gazebo="true"/>
+  <xacro:load_gazebo_sim_ros2_control_plugin robot_name="mobile_robot" use_gazebo="true"/>
+
+</robot>
