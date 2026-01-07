@@ -145,5 +145,22 @@
         <axis xyz="0 0 1"/>
         <origin xyz="-0.15 0 -0.06" rpy="0 0 0"/>
     </joint>
+
+    <gazebo reference="left_wheel_link">
+        <mu1>1.2</mu1>
+        <mu2>1.2</mu2>
+        <kp>1000000.0</kp>
+        <kd>10.0</kd>
+        <fdir1>1 0 0</fdir1>
+    </gazebo>
+
+    <gazebo reference="right_wheel_link">
+        <mu1>1.2</mu1>
+        <mu2>1.2</mu2>
+        <kp>1000000.0</kp>
+        <kd>10.0</kd>
+        <fdir1>1 0 0</fdir1>
+    </gazebo>
+
 </xacro:macro>
 </robot>
