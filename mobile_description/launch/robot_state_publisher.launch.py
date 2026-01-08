@@ -20,7 +20,7 @@ def generate_launch_description():
 
     declare_use_sim_time = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='false',
+        default_value='true',
         description='Use simulation clock'
     )
 
@@ -32,7 +32,7 @@ def generate_launch_description():
 
     declare_use_jsp_gui = DeclareLaunchArgument(
         'use_jsp_gui',
-        default_value='true',
+        default_value='false',
         description='Launch joint_state_publisher_gui (RViz sliders)'
     )
 

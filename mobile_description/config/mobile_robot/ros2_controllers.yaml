@@ -1,6 +1,6 @@
 controller_manager:
   ros__parameters:
-    update_rate: 100
+    update_rate: 200
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -23,6 +23,7 @@ diff_drive_controller:
     # IMPORTANT FLAGS (THIS FIXES YOUR ISSUE)
     use_stamped_vel: true
     cmd_vel_timeout: 0.5
+    invert_angular_velocity: true
 
     # Frames
     base_frame_id: base_footprint
