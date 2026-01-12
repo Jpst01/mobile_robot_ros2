@@ -58,35 +58,21 @@ Visualization Manager:
           Value: true
         base_link:
           Value: true
-        cam_1_color_frame:
-          Value: true
-        cam_1_color_optical_frame:
-          Value: true
-        cam_1_depth_frame:
-          Value: true
-        cam_1_depth_optical_frame:
-          Value: true
-        cam_1_infra1_frame:
-          Value: true
-        cam_1_infra1_optical_frame:
-          Value: true
-        cam_1_infra2_frame:
-          Value: true
-        cam_1_infra2_optical_frame:
-          Value: true
-        cam_1_link:
-          Value: true
         caster_wheel:
           Value: true
         imu_link:
           Value: true
         laser_frame:
           Value: true
+        left_wheel_link:
+          Value: true
         odom:
           Value: true
         rgbd_camera_link:
           Value: true
         rgbd_optical_frame:
+          Value: true
+        right_wheel_link:
           Value: true
       Marker Scale: 1
       Name: TF
