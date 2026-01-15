@@ -11,20 +11,37 @@ def generate_launch_description():
 
     package_name_gazebo = 'mobile_robot_gazebo'
     package_name_localization = 'mobile_robot_localization'
+    package_name_navigation = 'mobile_robot_navigation'
 
     gazebo_launch_file_path = 'launch/mobile_robot.gazebo.launch.py'
     ekf_launch_file_path = 'launch/ekf_gazebo.launch.py'
     ekf_config_file_path = 'config/ekf.yaml'
     rviz_config_file_path = 'rviz/mobile_robot_gazebo_sim.rviz'
+    map_file_path = 'maps/mobile_robot_map.yaml'
+    nav2_params_file_path = 'config/mobile_robot_nav2_default_params.yaml'
 
     pkg_share_gazebo = FindPackageShare(package=package_name_gazebo).find(package_name_gazebo)
     pkg_share_localization = FindPackageShare(package=package_name_localization).find(package_name_localization)
+    pkg_share_navigation = FindPackageShare(package=package_name_navigation).find(package_name_navigation)
 
     default_gazebo_launch_path = os.path.join(pkg_share_gazebo, gazebo_launch_file_path)
     default_ekf_launch_path = os.path.join(pkg_share_localization, ekf_launch_file_path)
     default_ekf_config_path = os.path.join(pkg_share_localization, ekf_config_file_path)
     default_rviz_config_path = os.path.join(pkg_share_gazebo, rviz_config_file_path)
 
+    nav2_dir = FindPackageShare(package='nav2_bringup').find('nav2_bringup')
+    nav2_launch_dir = os.path.join(nav2_dir, 'launch')
+    nav2_params_path = os.path.join(pkg_share_navigation, nav2_params_file_path)
+    static_map_path = os.path.join(pkg_share_navigation, map_file_path)
+
+    autostart = LaunchConfiguration('autostart')
+    map_yaml_file = LaunchConfiguration('map')
+    nav2_params_file = LaunchConfiguration('nav2_params_file')
+    namespace = LaunchConfiguration('namespace')
+    slam = LaunchConfiguration('slam')
+    use_namespace = LaunchConfiguration('use_namespace')
+    use_respawn = LaunchConfiguration ('use_respawn')
+    use_composition = LaunchConfiguration('use_composition')
     enable_odom_tf = LaunchConfiguration('enable_odom_tf')
     ekf_config_file = LaunchConfiguration('ekf_config_file')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
@@ -48,6 +65,12 @@ def generate_launch_description():
     use_rviz = LaunchConfiguration('use_rviz')
     use_gazebo = LaunchConfiguration('use_gazebo')
     use_robot_state_pub = LaunchConfiguration('use_robot_state_pub')
+
+    declare_autostart_cmd = DeclareLaunchArgument(
+        name='autostart',
+        default_value='true',
+        description='Automatically startup the nav2 stack'
+    )
 
     declare_ekf_config_file_cmd = DeclareLaunchArgument(
         name='ekf_config_file',
@@ -79,10 +102,40 @@ def generate_launch_description():
         description='Full path to the Gazebo launch file to use'
     )
 
+    declare_map_yaml_cmd = DeclareLaunchArgument(
+        name='map',
+        default_value=static_map_path,
+        description='Full path to map file to load'
+    )
+
+    declare_namespace_cmd = DeclareLaunchArgument(
+        name='namespace',
+        default_value='',
+        description='Top-level namespace'
+    )
+
+    declare_nav2_params_file_cmd = DeclareLaunchArgument(
+        name='nav2_params_file',
+        default_value=nav2_params_path,
+        description='Full path to the ROS2 parameters file to use for all launched nodes'
+    )
+
     declare_robot_name_cmd = DeclareLaunchArgument(
         name='robot_name',
         default_value='mobile_robot',
         description='Name of the robot'
+    )
+
+    declare_slam_cmd = DeclareLaunchArgument(
+        name='slam',
+        default_value='False',
+        description='Whether to run SLAM'
+    )
+
+    declare_use_namespace_cmd = DeclareLaunchArgument(
+        name='use_namespace',
+        default_value='False',
+        description='Top-level namespace'
     )
 
     declare_world_name_cmd = DeclareLaunchArgument(
@@ -151,6 +204,18 @@ def generate_launch_description():
         description='Load robot controllers'
     )
 
+    declare_use_composition_cmd = DeclareLaunchArgument(
+        name='use_composition',
+        default_value='True',
+        description='Use component container for nav2 nodes'
+    )
+
+    declare_use_respawn_cmd = DeclareLaunchArgument(
+        name='use_respawn',
+        default_value='False',
+        description='Respawn nav2 nodes if they crash'
+    )
+
     declare_use_rviz_cmd = DeclareLaunchArgument(
         name='use_rviz',
         default_value='true',
@@ -200,13 +265,36 @@ def generate_launch_description():
         }.items()
     )
 
+    start_ros2_navigation_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(nav2_launch_dir, 'navigation_launch.py')),
+        launch_arguments={
+            'autostart': autostart,
+            'map': map_yaml_file,
+            'namespace': namespace,
+            'slam': slam,
+            'use_namespace': use_namespace,
+            'use_respawn': use_respawn,
+            'use_composition': use_composition,
+            'params_file': nav2_params_file,
+            'use_sim_time': use_sim_time
+        }.items()
+    )
+
     ld = LaunchDescription()
 
+    ld.add_action(declare_autostart_cmd)
     ld.add_action(declare_ekf_config_file_cmd)
     ld.add_action(declare_ekf_launch_file_cmd)
     ld.add_action(declare_enable_odom_tf_cmd)
     ld.add_action(declare_rviz_config_file_cmd)
     ld.add_action(declare_gazebo_launch_file_cmd)
+    ld.add_action(declare_map_yaml_cmd)
+    ld.add_action(declare_nav2_params_file_cmd)
+    ld.add_action(declare_slam_cmd)
+    ld.add_action(declare_use_composition_cmd)
+    ld.add_action(declare_use_respawn_cmd)
+    ld.add_action(declare_use_namespace_cmd)
+    ld.add_action(declare_namespace_cmd)
     ld.add_action(declare_robot_name_cmd)
     ld.add_action(declare_world_name_cmd)
     ld.add_action(declare_x_cmd)
@@ -224,5 +312,6 @@ def generate_launch_description():
     ld.add_action(declare_use_robot_state_pub_cmd)
     ld.add_action(start_gazebo_cmd)
     ld.add_action(start_ekf_cmd)
+    ld.add_action(start_ros2_navigation_cmd)
 
     return ld
