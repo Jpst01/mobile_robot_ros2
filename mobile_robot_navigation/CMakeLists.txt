@@ -15,7 +15,7 @@ find_package(slam_toolbox REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 install(
-  DIRECTORY rviz
+  DIRECTORY rviz config maps
   DESTINATION share/{PROJECT_NAME}
 )
 
