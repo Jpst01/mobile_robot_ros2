@@ -16,7 +16,7 @@ find_package(slam_toolbox REQUIRED)
 
 install(
   DIRECTORY rviz config maps
-  DESTINATION share/{PROJECT_NAME}
+  DESTINATION share/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
