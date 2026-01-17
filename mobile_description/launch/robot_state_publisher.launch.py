@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
@@ -90,7 +91,11 @@ def generate_launch_description():
         package='rviz2',
         executable='rviz2',
         name='rviz2',
-        arguments=['-d', rviz_config],
+        arguments=['-d', os.path.join(
+            FindPackageShare('mobile_robot_navigation').find('mobile_robot_navigation'),
+            'rviz',
+            'nav2_default_view.rviz'
+        )],
         parameters=[{'use_sim_time': use_sim_time}],
         output='screen'
     )
