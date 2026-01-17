@@ -16,7 +16,7 @@ def generate_launch_description():
     gazebo_launch_file_path = 'launch/mobile_robot.gazebo.launch.py'
     ekf_launch_file_path = 'launch/ekf_gazebo.launch.py'
     ekf_config_file_path = 'config/ekf.yaml'
-    rviz_config_file_path = 'rviz/mobile_robot_gazebo_sim.rviz'
+    rviz_config_file_path = 'rviz/nav2_default_view.rviz'
     map_file_path = 'maps/mobile_robot_map.yaml'
     nav2_params_file_path = 'config/mobile_robot_nav2_default_params.yaml'
 
@@ -27,7 +27,7 @@ def generate_launch_description():
     default_gazebo_launch_path = os.path.join(pkg_share_gazebo, gazebo_launch_file_path)
     default_ekf_launch_path = os.path.join(pkg_share_localization, ekf_launch_file_path)
     default_ekf_config_path = os.path.join(pkg_share_localization, ekf_config_file_path)
-    default_rviz_config_path = os.path.join(pkg_share_gazebo, rviz_config_file_path)
+    default_rviz_config_path = os.path.join(pkg_share_navigation, rviz_config_file_path)
 
     nav2_dir = FindPackageShare(package='nav2_bringup').find('nav2_bringup')
     nav2_launch_dir = os.path.join(nav2_dir, 'launch')
@@ -104,7 +104,7 @@ def generate_launch_description():
 
     declare_map_yaml_cmd = DeclareLaunchArgument(
         name='map',
-        default_value=static_map_path,
+        default_value='',
         description='Full path to map file to load'
     )
 
@@ -128,7 +128,7 @@ def generate_launch_description():
 
     declare_slam_cmd = DeclareLaunchArgument(
         name='slam',
-        default_value='False',
+        default_value='True',
         description='Whether to run SLAM'
     )
 
@@ -188,7 +188,7 @@ def generate_launch_description():
 
     declare_jsp_gui_cmd = DeclareLaunchArgument(
         name='jsp_gui',
-        default_value='true',
+        default_value='False',
         description='Enable Gazebo JSP GUI'
     )
 
@@ -234,6 +234,14 @@ def generate_launch_description():
         description='Launch robot state publisher'
     )
 
+    start_ekf_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(ekf_launch_file),
+        launch_arguments={
+            'ekf_config_file': ekf_config_file,
+            'use_sim_time': use_sim_time
+        }.items()
+    )
+
     start_gazebo_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(gazebo_launch_file),
         launch_arguments={
@@ -257,14 +265,6 @@ def generate_launch_description():
         }.items()
     )
 
-    start_ekf_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(ekf_launch_file),
-        launch_arguments={
-            'ekf_config_file': ekf_config_file,
-            'use_sim_time': use_sim_time
-        }.items()
-    )
-
     start_ros2_navigation_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(nav2_launch_dir, 'navigation_launch.py')),
         launch_arguments={
@@ -279,6 +279,21 @@ def generate_launch_description():
             'use_sim_time': use_sim_time
         }.items()
     )
+
+    slam_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                FindPackageShare('slam_toolbox').find('slam_toolbox'),
+                'launch',
+                'online_async_launch.py'
+            )
+        ),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'params_file': nav2_params_file
+        }.items()
+    )
+
 
     ld = LaunchDescription()
 
@@ -312,6 +327,7 @@ def generate_launch_description():
     ld.add_action(declare_use_robot_state_pub_cmd)
     ld.add_action(start_gazebo_cmd)
     ld.add_action(start_ekf_cmd)
+    ld.add_action(slam_launch)
     ld.add_action(start_ros2_navigation_cmd)
 
     return ld
