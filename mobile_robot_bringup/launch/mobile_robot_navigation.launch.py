@@ -335,9 +335,9 @@ def generate_launch_description():
     ld.add_action(declare_use_sim_time_cmd)
  
     # Add any actions
-    ld.add_action(slam_launch)
-    ld.add_action(start_ekf_cmd)
     ld.add_action(start_gazebo_cmd)
+    ld.add_action(start_ekf_cmd)
+    ld.add_action(slam_launch)
     ld.add_action(start_ros2_navigation_cmd)
 
     return ld
