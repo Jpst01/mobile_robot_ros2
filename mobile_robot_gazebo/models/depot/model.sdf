@@ -337,13 +337,5 @@
             <parent>world</parent>
             <child>main</child>
         </joint>
-        <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
-            <joint_name>fan1_joint</joint_name>
-            <initial_velocity>1.0</initial_velocity>
-        </plugin>
-        <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
-            <joint_name>fan2_joint</joint_name>
-            <initial_velocity>2.0</initial_velocity>
-        </plugin>
     </model>
 </sdf>

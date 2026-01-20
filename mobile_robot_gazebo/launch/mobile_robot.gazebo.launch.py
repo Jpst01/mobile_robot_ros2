@@ -23,7 +23,7 @@ def generate_launch_description():
 
     default_robot_name = 'mobile_robot'
     gazebo_models_path = 'models'
-    default_world_file = 'empty.world'
+    default_world_file = 'depot.world'
     gazebo_worlds_path = 'worlds'
     ros_gz_bridge_config_file_path = 'config/ros_gz_bridge.yaml'
     rviz_config_filename = 'mobile_robot_gazebo_sim.rviz'

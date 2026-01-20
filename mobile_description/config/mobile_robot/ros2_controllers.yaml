@@ -17,8 +17,8 @@ diff_drive_controller:
     right_wheel_names: ["base_right_wheel_joint"]
 
     # Wheel geometry (example values – adjust later)
-    wheel_separation: 0.30
-    wheel_radius: 0.05
+    wheel_separation: 0.32
+    wheel_radius: 0.07
 
     # IMPORTANT FLAGS (THIS FIXES YOUR ISSUE)
     use_stamped_vel: true

@@ -30,12 +30,12 @@ def generate_launch_description():
     return LaunchDescription([
 
         TimerAction(
-            period=2.0,
+            period=20.0,
             actions=[joint_state_broadcaster_spawner]
         ),
 
         TimerAction(
-            period=4.0,
+            period=24.0,
             actions=[diff_drive_controller_spawner]
         ),
     ])

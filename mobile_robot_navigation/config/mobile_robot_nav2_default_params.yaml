@@ -5,7 +5,7 @@ amcl:
     alpha3: 0.2
     alpha4: 0.2
     alpha5: 0.2
-    base_frame_id: "base_footprint"
+    base_frame_id: "base_link"
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
     beam_skip_threshold: 0.3
@@ -42,7 +42,7 @@ bt_navigator:
   ros__parameters:
     use_sim_time: true
     global_frame: map
-    robot_base_frame: base_footprint
+    robot_base_frame: base_link
     odom_topic: /odometry/filtered
 
     navigators: ["navigate_to_pose", "navigate_through_poses"]
@@ -178,7 +178,7 @@ local_costmap:
       update_frequency: 5.0
       publish_frequency: 5.0
       global_frame: odom
-      robot_base_frame: base_footprint
+      robot_base_frame: base_link
       rolling_window: true
       width: 5
       height: 5
@@ -239,10 +239,10 @@ global_costmap:
       update_frequency: 5.0
       publish_frequency: 5.0
       global_frame: map
-      robot_base_frame: base_footprint
+      robot_base_frame: base_link
       robot_radius: 0.15  # Robot width is 300mm
       resolution: 0.05
-      track_unknown_space: true
+      track_unknown_space: false
       plugins: ["static_layer", "obstacle_layer", "voxel_layer", "inflation_layer"]
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
@@ -298,6 +298,7 @@ planner_server:
   ros__parameters:
     expected_planner_frequency: 20.0
     planner_plugins: ["GridBased"]
+
     GridBased:
       plugin: "nav2_navfn_planner::NavfnPlanner"
       tolerance: 0.5
@@ -333,7 +334,7 @@ behavior_server:
       plugin: "nav2_behaviors::AssistedTeleop"
     local_frame: odom
     global_frame: map
-    robot_base_frame: base_footprint
+    robot_base_frame: base_link
     transform_tolerance: 0.1
     simulate_ahead_time: 2.0
     max_rotational_vel: 0.50
@@ -367,7 +368,7 @@ velocity_smoother:
 
 collision_monitor:
   ros__parameters:
-    base_frame_id: "base_footprint"
+    base_frame_id: "base_link"
     odom_frame_id: "odom"
     cmd_vel_in_topic: "cmd_vel_smoothed"
     cmd_vel_out_topic: "cmd_vel"
@@ -410,7 +411,7 @@ slam_toolbox:
     # ROS Parameters
     odom_frame: odom
     map_frame: map
-    base_frame: base_footprint
+    base_frame: base_link
     scan_topic: /scan
     use_map_saver: true
     mode: mapping #localization
