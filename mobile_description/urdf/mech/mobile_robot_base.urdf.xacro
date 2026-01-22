@@ -128,14 +128,14 @@
     <joint name="base_right_wheel_joint" type="continuous">
         <parent link="base_link"/>
         <child link="right_wheel_link"/>
-        <axis xyz="0 1 0"/>
+        <axis xyz="0 -1 0"/>
         <origin xyz="0.1 0.16 -0.03" rpy="0 0 0"/>
     </joint>
 
     <joint name="base_left_wheel_joint" type="continuous">
         <parent link="base_link"/>
         <child link="left_wheel_link"/>
-        <axis xyz="0 1 0"/>
+        <axis xyz="0 -1 0"/>
         <origin xyz="0.1 -0.16 -0.03" rpy="0 0 0"/>
     </joint>
 
