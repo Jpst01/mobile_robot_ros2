@@ -21,9 +21,9 @@ diff_drive_controller:
     wheel_radius: 0.07
 
     # IMPORTANT FLAGS (THIS FIXES YOUR ISSUE)
-    use_stamped_vel: true
+    use_stamped_vel: false
     cmd_vel_timeout: 0.5
-    invert_angular_velocity: true
+    invert_angular_velocity: false
 
     # Frames
     base_frame_id: base_footprint
