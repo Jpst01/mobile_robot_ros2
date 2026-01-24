@@ -427,7 +427,7 @@ slam_toolbox:
     # or at the dock, but they are mutually exclusive, if pose is given
     # will use pose
     #map_file_name: test_steve
-    #map_start_pose: [0.0, 0.0, 0.0]
+    map_start_pose: [0.0, 0.0, 0.0]
     #map_start_at_dock: true
 
     debug_logging: false
@@ -445,8 +445,8 @@ slam_toolbox:
     # General Parameters
     use_scan_matching: true
     use_scan_barycenter: true
-    minimum_travel_distance: 0.5
-    minimum_travel_heading: 0.5
+    minimum_travel_distance: 0.05
+    minimum_travel_heading: 0.1
     scan_buffer_size: 10
     scan_buffer_maximum_scan_distance: 10.0
     link_match_minimum_response_fine: 0.1
@@ -484,6 +484,7 @@ lifecycle_manager_navigation:
     use_sim_time: true
     autostart: true
     node_names:
+      - slam_toolbox
       - controller_server
       - planner_server
       - smoother_server

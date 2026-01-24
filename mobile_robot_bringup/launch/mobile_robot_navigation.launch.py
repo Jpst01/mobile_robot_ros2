@@ -35,18 +35,19 @@ def generate_launch_description():
     static_map_path = os.path.join(pkg_share_navigation, map_file_path)
 
     autostart = LaunchConfiguration('autostart')
-    map_yaml_file = LaunchConfiguration('map')
-    nav2_params_file = LaunchConfiguration('nav2_params_file')
-    namespace = LaunchConfiguration('namespace')
-    slam = LaunchConfiguration('slam')
-    use_namespace = LaunchConfiguration('use_namespace')
-    use_respawn = LaunchConfiguration ('use_respawn')
-    use_composition = LaunchConfiguration('use_composition')
+    camera_namespace = LaunchConfiguration('camera_namespace')
     enable_odom_tf = LaunchConfiguration('enable_odom_tf')
     ekf_config_file = LaunchConfiguration('ekf_config_file')
-    rviz_config_file = LaunchConfiguration('rviz_config_file')
-    gazebo_launch_file = LaunchConfiguration('gazebo_launch_file')
     ekf_launch_file = LaunchConfiguration('ekf_launch_file')
+    gazebo_launch_file = LaunchConfiguration('gazebo_launch_file')
+    map_yaml_file = LaunchConfiguration('map')
+    namespace = LaunchConfiguration('namespace')
+    nav2_params_file = LaunchConfiguration('nav2_params_file')
+    rviz_config_file = LaunchConfiguration('rviz_config_file') 
+    slam = LaunchConfiguration('slam')
+    use_composition = LaunchConfiguration('use_composition')
+    use_namespace = LaunchConfiguration('use_namespace')
+    use_respawn = LaunchConfiguration ('use_respawn')
 
     robot_name = LaunchConfiguration('robot_name')
     world_name = LaunchConfiguration('world_name')
@@ -60,17 +61,22 @@ def generate_launch_description():
 
     headless = LaunchConfiguration('headless')
     jsp_gui = LaunchConfiguration('jsp_gui')
-    use_sim_time = LaunchConfiguration('use_sim_time')
     load_controllers = LaunchConfiguration('load_controllers')
-    use_rviz = LaunchConfiguration('use_rviz')
     use_gazebo = LaunchConfiguration('use_gazebo')
     use_robot_state_pub = LaunchConfiguration('use_robot_state_pub')
+    use_rviz = LaunchConfiguration('use_rviz')
+    use_sim_time = LaunchConfiguration('use_sim_time')
 
     declare_autostart_cmd = DeclareLaunchArgument(
         name='autostart',
         default_value='true',
         description='Automatically startup the nav2 stack'
     )
+
+    declare_camera_namespace_cmd = DeclareLaunchArgument(
+        name='camera_namespace',
+        default_value='camera',
+        description='Namespace for the camera')
 
     declare_ekf_config_file_cmd = DeclareLaunchArgument(
         name='ekf_config_file',
@@ -88,12 +94,6 @@ def generate_launch_description():
         name='enable_odom_tf',
         default_value='true',
         description='Enable publishing odom to base_link TF'
-    )
-
-    declare_rviz_config_file_cmd = DeclareLaunchArgument(
-        name='rviz_config_file',
-        default_value=default_rviz_config_path,
-        description='Full path to the RVIZ config file to use'
     )
 
     declare_gazebo_launch_file_cmd = DeclareLaunchArgument(
@@ -120,6 +120,12 @@ def generate_launch_description():
         description='Full path to the ROS2 parameters file to use for all launched nodes'
     )
 
+    declare_rviz_config_file_cmd = DeclareLaunchArgument(
+        name='rviz_config_file',
+        default_value=default_rviz_config_path,
+        description='Full path to the RVIZ config file to use'
+    )
+
     declare_robot_name_cmd = DeclareLaunchArgument(
         name='robot_name',
         default_value='mobile_robot',
@@ -140,7 +146,7 @@ def generate_launch_description():
 
     declare_world_name_cmd = DeclareLaunchArgument(
         name='world_name',
-        default_value='empty.world',
+        default_value='depot.world',
         description='Name of the world to load in Gazebo'
     )
 
@@ -158,7 +164,7 @@ def generate_launch_description():
 
     declare_z_cmd = DeclareLaunchArgument(
         name='z',
-        default_value='0.0',
+        default_value='0.20',
         description='Initial Z position of the robot'
     )
 
@@ -192,12 +198,6 @@ def generate_launch_description():
         description='Enable Gazebo JSP GUI'
     )
 
-    declare_use_sim_time_cmd = DeclareLaunchArgument(
-        name='use_sim_time',
-        default_value='true',
-        description='Use simulation (Gazebo) clock if true'
-    )
-
     declare_load_controllers_cmd = DeclareLaunchArgument(
         name='load_controllers',
         default_value='true',
@@ -216,12 +216,6 @@ def generate_launch_description():
         description='Respawn nav2 nodes if they crash'
     )
 
-    declare_use_rviz_cmd = DeclareLaunchArgument(
-        name='use_rviz',
-        default_value='true',
-        description='Launch RViz'
-    )
-
     declare_use_gazebo_cmd = DeclareLaunchArgument(
         name='use_gazebo',
         default_value='true',
@@ -232,6 +226,18 @@ def generate_launch_description():
         name='use_robot_state_pub',
         default_value='true',
         description='Launch robot state publisher'
+    )
+
+    declare_use_rviz_cmd = DeclareLaunchArgument(
+        name='use_rviz',
+        default_value='true',
+        description='Launch RViz'
+    )
+
+    declare_use_sim_time_cmd = DeclareLaunchArgument(
+        name='use_sim_time',
+        default_value='true',
+        description='Use simulation (Gazebo) clock if true'
     )
 
     start_ekf_cmd = IncludeLaunchDescription(
@@ -246,37 +252,38 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(gazebo_launch_file),
         launch_arguments={
             'enable_odom_tf': enable_odom_tf,
+            'headless': headless,
+            'jsp_gui': jsp_gui,
             'load_controllers': load_controllers,
+            'publish_odom': 'True',
+            'robot_name': robot_name,
+            'rviz_config_file': rviz_config_file,
             'use_rviz': use_rviz,
             'use_gazebo': use_gazebo,
             'use_robot_state_pub': use_robot_state_pub,
-            'rviz_config_file': rviz_config_file,
-            'robot_name': robot_name,
+            'use_sim_time': use_sim_time,
             'world_name': world_name,
             'x': x,
             'y': y,
             'z': z,
             'roll': roll,
             'pitch': pitch,
-            'yaw': yaw,
-            'headless': headless,
-            'jsp_gui': jsp_gui,
-            'use_sim_time': use_sim_time
+            'yaw': yaw
         }.items()
     )
 
     start_ros2_navigation_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(nav2_launch_dir, 'navigation_launch.py')),
         launch_arguments={
-            'autostart': autostart,
-            'map': map_yaml_file,
             'namespace': namespace,
-            'slam': slam,
             'use_namespace': use_namespace,
-            'use_respawn': use_respawn,
+            'slam': slam,
+            'map': map_yaml_file,
+            'use_sim_time': use_sim_time,
+            'slam_params_file': nav2_params_file,
+            'autostart': autostart,
             'use_composition': use_composition,
-            'params_file': nav2_params_file,
-            'use_sim_time': use_sim_time
+            'use_respawn': use_respawn
         }.items()
     )
 
@@ -290,7 +297,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
-            'params_file': nav2_params_file
+            'slam_params_file': nav2_params_file
         }.items()
     )
 
@@ -298,6 +305,7 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     ld.add_action(declare_autostart_cmd)
+    ld.add_action(declare_camera_namespace_cmd)
     ld.add_action(declare_enable_odom_tf_cmd)
     ld.add_action(declare_ekf_config_file_cmd)
     ld.add_action(declare_ekf_launch_file_cmd)

@@ -1,0 +1,23 @@
+{
+    "ROS2.distro": "jazzy",
+    "python.autoComplete.extraPaths": [
+        "/home/jpst/ros2_ws/install/yahboom_rosmaster_msgs/lib/python3.12/site-packages",
+        "/home/jpst/ros2_ws/install/ros2_fundamentals_examples/lib/python3.12/site-packages",
+        "/home/jpst/ws_moveit/install/moveit_task_constructor_core/lib/python3.12/site-packages",
+        "/home/jpst/ws_moveit/install/moveit_task_constructor_msgs/lib/python3.12/site-packages",
+        "/home/jpst/ws_moveit/install/moveit_py/lib/python3.12/site-packages",
+        "/home/jpst/ws_moveit/install/moveit_msgs/lib/python3.12/site-packages",
+        "/home/jpst/ws_moveit/install/moveit_configs_utils/lib/python3.12/site-packages",
+        "/opt/ros/jazzy/lib/python3.12/site-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/jpst/ros2_ws/install/yahboom_rosmaster_msgs/lib/python3.12/site-packages",
+        "/home/jpst/ros2_ws/install/ros2_fundamentals_examples/lib/python3.12/site-packages",
+        "/home/jpst/ws_moveit/install/moveit_task_constructor_core/lib/python3.12/site-packages",
+        "/home/jpst/ws_moveit/install/moveit_task_constructor_msgs/lib/python3.12/site-packages",
+        "/home/jpst/ws_moveit/install/moveit_py/lib/python3.12/site-packages",
+        "/home/jpst/ws_moveit/install/moveit_msgs/lib/python3.12/site-packages",
+        "/home/jpst/ws_moveit/install/moveit_configs_utils/lib/python3.12/site-packages",
+        "/opt/ros/jazzy/lib/python3.12/site-packages"
+    ]
+}
