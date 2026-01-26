@@ -484,7 +484,7 @@ lifecycle_manager_navigation:
     use_sim_time: true
     autostart: true
     node_names:
-      - slam_toolbox
+      - slam_toolbox  
       - controller_server
       - planner_server
       - smoother_server
