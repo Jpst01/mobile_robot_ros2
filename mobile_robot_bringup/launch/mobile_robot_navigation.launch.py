@@ -277,8 +277,7 @@ def generate_launch_description():
         launch_arguments={
             'namespace': namespace,
             'use_namespace': use_namespace,
-            'slam': slam,
-            'map': map_yaml_file,
+            'map': '',
             'use_sim_time': use_sim_time,
             'slam_params_file': nav2_params_file,
             'autostart': autostart,
@@ -344,7 +343,7 @@ def generate_launch_description():
  
     # Add any actions
     ld.add_action(start_gazebo_cmd)
-    ld.add_action(start_ekf_cmd)
+    #ld.add_action(start_ekf_cmd)
     ld.add_action(slam_launch)
     ld.add_action(start_ros2_navigation_cmd)
 

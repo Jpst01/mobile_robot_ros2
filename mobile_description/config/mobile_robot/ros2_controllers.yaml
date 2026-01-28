@@ -28,12 +28,9 @@ diff_drive_controller:
     # CRITICAL: These control TF publishing
     publish_odom: true           # Publish odom topic
     open_loop: false
-    enable_odom_tf: false        # DON'T publish TF - let EKF do it
-    
-    # Remove or comment out publish_odom_tf if it doesn't exist
-    # publish_odom_tf: false
-    
-    # Motion limits
+    enable_odom_tf: true
+    publish_tf: false
+
     linear:
       x:
         has_velocity_limits: true
