@@ -4,7 +4,7 @@
 ![ROS 2](https://img.shields.io/badge/ROS%202-Jazzy%20Jalisco-22314E?logo=ros&logoColor=white)
 
 **Repository:** https://github.com/Jpst01/mobile_robot_ros2  
-**Author:** Jayeshwar P. S. Tanwar  
+**Author:** Jayeshwar Pratap Singh Tanwar  
 **Project Type:** Individual / Solo Project  
 **Development Status:** Actively under development  
 
