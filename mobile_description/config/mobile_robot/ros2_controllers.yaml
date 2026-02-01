@@ -28,7 +28,7 @@ diff_drive_controller:
     # CRITICAL: These control TF publishing
     publish_odom: true           # Publish odom topic
     open_loop: false
-    enable_odom_tf: true
+    enable_odom_tf: false
     publish_tf: false
 
     linear:

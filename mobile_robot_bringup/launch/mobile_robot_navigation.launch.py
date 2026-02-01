@@ -277,7 +277,8 @@ def generate_launch_description():
         launch_arguments={
             'namespace': namespace,
             'use_namespace': use_namespace,
-            'map': '',
+            'slam': slam,
+            'map': map_yaml_file,
             'use_sim_time': use_sim_time,
             'slam_params_file': nav2_params_file,
             'autostart': autostart,
