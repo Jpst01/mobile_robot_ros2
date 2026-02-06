@@ -344,7 +344,7 @@ def generate_launch_description():
  
     # Add any actions
     ld.add_action(start_gazebo_cmd)
-    #ld.add_action(start_ekf_cmd)
+    ld.add_action(start_ekf_cmd)
     ld.add_action(slam_launch)
     ld.add_action(start_ros2_navigation_cmd)
 
