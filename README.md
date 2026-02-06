@@ -240,16 +240,7 @@ Planned integration steps:
 
 ---
 
-## 12. Repository Activity and Development Practices
-
-- Regular, incremental commits
-- Issues debugged step by step rather than masked
-- No external templates or boilerplate used
-- Commit history reflects real development progress, including mistakes and corrections
-
----
-
-## 13. How to Build and Run
+## 12. How to Build and Run
 
 ### Build
 
