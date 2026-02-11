@@ -209,7 +209,6 @@ Planned integration steps:
 
 ## 10. Current Limitations
 
-- SLAM mapping is unstable during rotation
 - Autonomous navigation is not yet implemented
 - Focus is currently on correctness rather than performance optimization
 
