@@ -189,24 +189,7 @@ All components are integrated using ROS 2 launch files and built using `colcon`.
 ### Current State
 
 - SLAM integration is **in progress**
-- Mapping is partially functional but currently unreliable
-
-### Known Issue (Important)
-
-- When the robot **rotates in place**, the **RViz map rotates along with the robot**
-- This issue does **not** occur during pure forward or backward motion
-- The resulting map becomes corrupted and unusable
-- The problem is related to incorrect handling of TF frames between:
-  - `map`
-  - `odom`
-  - `base_link`
-
-### Transparency Note
-
-- One recent commit message incorrectly states that this issue was solved
-- That commit was **incorrect**
-- The issue is **not resolved** and is under active debugging
-- This README intentionally documents that mistake for clarity and honesty
+- Mapping is functional
 
 ---
 
