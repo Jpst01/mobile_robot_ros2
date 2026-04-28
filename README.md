@@ -23,7 +23,7 @@ The primary goals of this project are:
 - To gain a solid understanding of ROS 2 system architecture and middleware behavior.
 - To design and simulate a mobile robot with a clean and correct TF tree.
 - To integrate multiple sensors and validate their data in simulation.
-- To prepare a strong foundation for autonomous navigation using Nav2.
+- To implement SLAM-based environment mapping using Nav2 and slam_toolbox.
 
 This project is used as a learning and validation platform for robotics fundamentals relevant to real-world embedded and robotic systems.
 
@@ -184,45 +184,32 @@ All components are integrated using ROS 2 launch files and built using `colcon`.
 
 ---
 
-## 8. SLAM and Mapping Status
+## 8. SLAM and Mapping
 
-### Current State
-
-- SLAM integration is **in progress**
-- Mapping is functional
-
----
-
-## 9. Navigation Plan (Nav2)
-
-Planned integration steps:
-
-- Fix TF consistency during SLAM
-- Generate a stable 2D occupancy map
-- Save and reuse the generated map
-- Integrate Nav2 stack
-- Implement:
-  - Waypoint-based navigation
-  - Obstacle avoidance using the map
+- SLAM integration is **complete** using `slam_toolbox` (online async mode)
+- The robot can be driven via keyboard teleop to map the environment
+- EKF sensor fusion (wheel odometry + IMU) provides accurate localization
+- 2D occupancy grid maps can be generated and saved
+- Saved maps are stored in `mobile_robot_navigation/maps/`
 
 ---
 
-## 10. Current Limitations
+## 9. Current Limitations
 
-- Autonomous navigation is not yet implemented
-- Focus is currently on correctness rather than performance optimization
+- Autonomous waypoint navigation is not yet implemented
+- Focus is on correctness of SLAM and sensor fusion rather than performance optimization
 
 ---
 
-## 11. Future Improvements
+## 10. Future Improvements
 
-- Validate odometry and sensor fusion
-- Add Nav2-based autonomous navigation
+- Add Nav2-based autonomous waypoint navigation
+- Implement obstacle avoidance using the saved map
 - Improve simulation realism (noise, friction, sensor parameters)
 
 ---
 
-## 12. How to Build and Run
+## 11. How to Build and Run
 
 ### Build
 
@@ -230,4 +217,26 @@ Planned integration steps:
 cd ~/mobile_robot_ws
 colcon build
 source install/setup.bash
-ros2 launch mobile_robot_bringup mobile_robot_navigation.launch.py
+```
+
+### Launch SLAM Mapping
+
+```bash
+ros2 launch mobile_robot_bringup mobile_robot_navigation.launch.py use_composition:=False
+```
+
+### Drive the Robot (in a separate terminal)
+
+```bash
+# Forward
+ros2 topic pub --rate 10 /diff_drive_controller/cmd_vel geometry_msgs/msg/TwistStamped "{twist: {linear: {x: 0.2}, angular: {z: 0.0}}}"
+
+# Rotate
+ros2 topic pub --rate 10 /diff_drive_controller/cmd_vel geometry_msgs/msg/TwistStamped "{twist: {linear: {x: 0.0}, angular: {z: 0.2}}}"
+```
+
+### Save the Map
+
+```bash
+ros2 run nav2_map_server map_saver_cli -f ~/mobile_robot_ws/src/mobile_robot/mobile_robot_navigation/maps/my_map
+```

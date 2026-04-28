@@ -17,7 +17,6 @@ def generate_launch_description():
     ekf_launch_file_path = 'launch/ekf_gazebo.launch.py'
     ekf_config_file_path = 'config/ekf.yaml'
     rviz_config_file_path = 'rviz/nav2_default_view.rviz'
-    map_file_path = 'maps/mobile_robot_map.yaml'
     nav2_params_file_path = 'config/mobile_robot_nav2_default_params.yaml'
 
     pkg_share_gazebo = FindPackageShare(package=package_name_gazebo).find(package_name_gazebo)
@@ -32,7 +31,6 @@ def generate_launch_description():
     nav2_dir = FindPackageShare(package='nav2_bringup').find('nav2_bringup')
     nav2_launch_dir = os.path.join(nav2_dir, 'launch')
     nav2_params_path = os.path.join(pkg_share_navigation, nav2_params_file_path)
-    static_map_path = os.path.join(pkg_share_navigation, map_file_path)
 
     autostart = LaunchConfiguration('autostart')
     camera_namespace = LaunchConfiguration('camera_namespace')
